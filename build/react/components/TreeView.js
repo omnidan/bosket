@@ -90,6 +90,15 @@ var TreeViewBaseClass = function (_React$PureComponent) {
             if (update) this.defaultsMix = _extends({}, defaults, nextProps);
         }
     }, {
+        key: "componentDidUpdate",
+        value: function componentDidUpdate(prevProps) {
+            if (prevProps.model !== this.props.model) {
+                this.setState({
+                    filtered: this.rootNode.filterTree(this.state.search)
+                });
+            }
+        }
+    }, {
         key: "render",
         value: function render() {
             var sort = this.props.sort;

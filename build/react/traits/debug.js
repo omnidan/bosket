@@ -12,7 +12,7 @@ import React from "react";
 
 import { displayName } from "./helpers";
 
-import { printer } from "../../tools/printer";
+import { printer } from "@bosket/tools/printer";
 
 export var withDebugUpdates = function withDebugUpdates() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},

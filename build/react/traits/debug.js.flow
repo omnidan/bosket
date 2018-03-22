@@ -1,6 +1,6 @@
 // @flow
 
-import {printer} from "../../tools/printer";
+import {printer} from "@bosket/tools/printer";
 import {displayName} from "./helpers";
 import type {trait} from "./helpers";
 import React from "react";

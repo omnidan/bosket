@@ -143,18 +143,28 @@ class TreeViewNodeBaseClass extends React.PureComponent<TreeViewNodeProps, TreeV
         const OpenerComponent = this.props.opener || "span"
         const list = model
             .filter(m => !this.props.searched || this.props.filteredModel && this.props.filteredModel.has(m))
-            .map((item, idx) =>
-                <li key={ unique && unique(item) || idx }
-                    className={ this.node.liCss(item) }
-                    { ...this.node.getDragEvents(item) }>
-                    <span className={ this.node.mixCss("item") } onClick={ this.node.onClick(item) }>
-                        { this.renderOpener(item, OpenerComponent)("left") }
-                        { display && display(item, this.props) }
-                        { this.renderOpener(item, OpenerComponent)("right") }
-                    </span>
-                    { this.renderSubtree(item) }
-                </li>
-            )
+            .map((item, idx) => {
+                let result
+                if(typeof display === "function") {
+                    result = display(item, this.props)
+                    if(!result) { // item hidden, don't render it
+                        return false
+                    }
+                }
+                return (
+                    <li key={ unique && unique(item) || idx }
+                        className={ this.node.liCss(item) }
+                        { ...this.node.getDragEvents(item) }>
+                        <span className={ this.node.mixCss("item") } onClick={ this.node.onClick(item) }>
+                            { this.renderOpener(item, OpenerComponent)("left") }
+                            { result }
+                            { this.renderOpener(item, OpenerComponent)("right") }
+                        </span>
+                        { this.renderSubtree(item) }
+                    </li>
+                )
+            })
+            .filter(item => item !== false)
 
         return (
             <ul className={ this.node.ulCss() }

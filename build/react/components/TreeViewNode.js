@@ -115,7 +115,7 @@ var TreeViewNodeBaseClass = function (_React$PureComponent) {
             var _this3 = this;
 
             return function (position) {
-                return (_this3.node.hasChildren(item) || _this3.node.isAsync(item)) && _this3.props.openerOpts.position === position ? React.createElement(OpenerComponent, { className: _this3.node.mixCss("opener"), onClick: _this3.node.onOpener(item) }) : null;
+                return (_this3.node.hasChildren(item) || _this3.node.isAsync(item)) && _this3.props.openerOpts.position === position ? React.createElement(OpenerComponent, { item: item, className: _this3.node.mixCss("opener"), onClick: _this3.node.onOpener(item) }) : null;
             };
         }
     }, {
@@ -142,6 +142,14 @@ var TreeViewNodeBaseClass = function (_React$PureComponent) {
             var list = model.filter(function (m) {
                 return !_this4.props.searched || _this4.props.filteredModel && _this4.props.filteredModel.has(m);
             }).map(function (item, idx) {
+                var result = void 0;
+                if (typeof display === "function") {
+                    result = display(item, _this4.props);
+                    if (!result) {
+                        // item hidden, don't render it
+                        return false;
+                    }
+                }
                 return React.createElement(
                     "li",
                     _extends({ key: unique && unique(item) || idx,
@@ -151,11 +159,13 @@ var TreeViewNodeBaseClass = function (_React$PureComponent) {
                         "span",
                         { className: _this4.node.mixCss("item"), onClick: _this4.node.onClick(item) },
                         _this4.renderOpener(item, OpenerComponent)("left"),
-                        display && display(item, _this4.props),
+                        result,
                         _this4.renderOpener(item, OpenerComponent)("right")
                     ),
                     _this4.renderSubtree(item)
                 );
+            }).filter(function (item) {
+                return item !== false;
             });
 
             return React.createElement(
